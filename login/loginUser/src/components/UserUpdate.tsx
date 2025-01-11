@@ -1,7 +1,8 @@
 import { Box, Button, Modal, TextField } from "@mui/material";
 import { FormEvent, useContext, useRef, useState } from "react";
-import { styleModal, userContext } from "./Home";
+import { userContext } from "./Home";
 import { useContextSet } from "./UserName";
+import { styleModal } from "./LoginUser";
 // import { setopen } from "./UserName";
 
 const UserUpdate = () => {
@@ -20,11 +21,11 @@ const UserUpdate = () => {
     useUpdateDispatch({
       type: "UPDATE",
       data: {
-        FullName: nameRef.current?.value,
-        Passowrd: passwordRef.current?.value,
-        Email: emailRef.current?.value,
-        Address: addressRef.current?.value,
-        Phone: phoneRef.current?.value,
+        FullName: nameRef.current?.value || useUpdate.FullName,
+        Password: passwordRef.current?.value||useUpdate.Password,
+        Email: emailRef.current?.value||useUpdate.Email,
+        Address: addressRef.current?.value||useUpdate.Address,
+        Phone: phoneRef.current?.value||useUpdate.Phone,
       },
     });
     setopenModal(false);
@@ -41,7 +42,7 @@ const UserUpdate = () => {
               label="FullName"
               variant="outlined"
               inputRef={nameRef}
-              required
+
             />
             <TextField
               id="outlined-basic"
@@ -49,7 +50,6 @@ const UserUpdate = () => {
               variant="outlined"
               type="email"
               inputRef={emailRef}
-              required
             />
             <TextField
               id="outlined-basic"
@@ -57,14 +57,12 @@ const UserUpdate = () => {
               variant="outlined"
               type="password"
               inputRef={passwordRef}
-              required
             />
             <TextField
               id="outlined-basic"
               label="phone"
               variant="outlined"
               inputRef={phoneRef}
-              required
             />
             <Button variant="outlined" type="submit">
               Login user

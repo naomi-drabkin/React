@@ -5,12 +5,13 @@ import {
 } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import { 
+  createContext,
   useContext,
   useRef,
   useState,
 } from "react";
 import axios from "axios";
-import {userContext } from "./Home";
+import {idContext, userContext } from "./Home";
 
 export type User = {
   FullName: string;
@@ -43,18 +44,13 @@ const buttonStyle = {
   left: "2%",
 };
 
-// export const userLoginContext = createContext<[User, Dispatch<Action>]>([
-//   {} as User,
-//   () => {},
-// ]);
 
 const LoginUser = ({onclick}:{onclick:Function}) => {
 
   const [openModal, setopenModal] = useState(false);
-  // const [openUser, setopenUser] = useState(false);
-  // const [userToSend, setuserToSend] = useState({} as User);
 
   const [user, UserDispatch] = useContext(userContext);
+  const [id, setid] = useContext(idContext);
 
   const nameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -67,8 +63,7 @@ const LoginUser = ({onclick}:{onclick:Function}) => {
         Password: passwordRef.current?.value,
       });
       onclick();
-
-      console.log(res);
+     setid(res.data.user.id);
        UserDispatch({
         type: "LOGIN",
         data: {
@@ -120,7 +115,6 @@ const LoginUser = ({onclick}:{onclick:Function}) => {
         </Box>
       </Modal>
 
-      {/* <userContext.Provider value={[user, UserDispatch]}> */}
 
           <Box>           
             <Button
@@ -134,7 +128,6 @@ const LoginUser = ({onclick}:{onclick:Function}) => {
             </Button>
           </Box>
         
-      {/* </userContext.Provider> */}
     </>
   );
 };

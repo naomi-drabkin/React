@@ -1,7 +1,7 @@
 import { Box, Button, Modal, TextField } from "@mui/material";
 import axios from "axios";
-import { useContext, useRef, useState } from "react";
-import { userContext } from "./Home";
+import { createContext, useContext, useRef, useState } from "react";
+import { idContext, userContext } from "./Home";
 import { styleModal } from "./LoginUser";
 
 const buttonStyle = {
@@ -12,15 +12,16 @@ const buttonStyle = {
 
 const CreateUser = ({ onclick }: { onclick: Function }) => {
   const [openModal, setopenModal] = useState(false);
-
   const [user, UserDispatch] = useContext(userContext);
+  const [id, setid] = useContext(idContext);
+
   const nameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      await axios.post("http://localhost:3000/api/user/register", {
+      const res = await axios.post("http://localhost:3000/api/user/register", {
         FullName: nameRef.current?.value,
         Password: passwordRef.current?.value,
       });
@@ -31,8 +32,9 @@ const CreateUser = ({ onclick }: { onclick: Function }) => {
           FullName: nameRef.current?.value,
           Password: passwordRef.current?.value,
         },
-      });
-      // setopenUser(true);
+      });      
+      setid(res.data.userId);
+      
     } catch (e: any) {
       if (
         (e.response && e.response.status === 401) ||
@@ -75,17 +77,17 @@ const CreateUser = ({ onclick }: { onclick: Function }) => {
         </Box>
       </Modal>
 
-      <Box>
-        <Button
-          sx={buttonStyle}
-          variant="contained"
-          color="primary"
-          size="large"
-          onClick={() => setopenModal(true)}
-        >
-          הרשמה
-        </Button>
-      </Box>
+        <Box>
+          <Button
+            sx={buttonStyle}
+            variant="contained"
+            color="primary"
+            size="large"
+            onClick={() => setopenModal(true)}
+          >
+            הרשמה
+          </Button>
+        </Box>
     </>
   );
 };

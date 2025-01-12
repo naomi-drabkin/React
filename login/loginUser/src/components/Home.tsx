@@ -1,4 +1,4 @@
-import { createContext, Dispatch, useReducer, useState } from "react";
+import { createContext, Dispatch, SetStateAction, useReducer, useState } from "react";
 import LoginUser, { Action, User } from "./LoginUser";
 import CreateUser from "./CreateUser";
 import UserName from "./UserName";
@@ -22,6 +22,11 @@ export const userContext = createContext<[User, Dispatch<Action>]>([
   () => {},
 ]);
 
+export const idContext = createContext<[Number, Dispatch<SetStateAction<Number>>]>([
+  0,
+  () => {},
+]);
+
 export const initialUser: User = {
   FullName: "",
   Email: "",
@@ -33,6 +38,7 @@ export const initialUser: User = {
 const Home = () => {
   const [user, UserDispatch] = useReducer(userReducer, initialUser);
   const [loginUser, setloginUser] = useState(false);
+  const [id, setid] = useState<Number>(0);
 
   const handleSubmit = () => {
     setloginUser(true);
@@ -43,17 +49,21 @@ const Home = () => {
     <>
       <userContext.Provider value={[user, UserDispatch]}>
         <>
-          {!loginUser ? (
+          <idContext.Provider value={[id, setid]}>
             <>
-              <h1>HOME 💔</h1>
-              <LoginUser onclick={handleSubmit} />
-              <CreateUser onclick={handleSubmit} />
+              {!loginUser ? (
+                <>
+                  <h1>HOME 💔</h1>
+                  <LoginUser onclick={handleSubmit} />
+                  <CreateUser onclick={handleSubmit} />
+                </>
+              ) : (
+                <>
+                  <UserName />
+                </>
+              )}
             </>
-          ) : (
-            <>
-              <UserName />
-            </>
-          )}
+          </idContext.Provider>
         </>
       </userContext.Provider>
     </>
